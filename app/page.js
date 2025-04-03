@@ -100,7 +100,7 @@ export default function HomePage() {
 
     const totalMessage = `\n\n*Total: $${totalPrice.toFixed(2)}*`;
 
-    const phoneNumber = "543815700884";
+    const phoneNumber = "543813501872";
     const whatsappUrl = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${encodeURIComponent(
       `${message}${totalMessage}`
     )}`;
