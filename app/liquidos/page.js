@@ -3,12 +3,11 @@
 import { useState, useEffect } from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { ShoppingCart, Plus, Minus, Send, X, Menu, ArrowUpDown } from "lucide-react"
+import { ShoppingCart, Plus, Minus, Send, X, Menu } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 import { cn } from "@/lib/utils"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 
 // Debug: Confirm that the file is loaded
 console.log("LiquidosPage component loaded");
@@ -18,28 +17,76 @@ export default function LiquidosPage() {
   const initialProducts = [
     { id: 1, name: "6 LECHES (NUEVA RECETA)", description: "Malteada de frutilla, leche condensada y cremas.", category: "Postres", image: "/Postres.jpg" },
     { id: 2, name: "BAILEYS", description: "Licor de chocolate con finas notas de café.", category: "Postres", image: "/Postres.jpg" },
-    { id: 3, name: "DRAGÓN ROJO", description: "Fruta del dragón con frutillas, natillas y cremas.", category: "Postres", image: "/Postres.jpg" },
-    // ...other products for Postres
+    { id: 3, name: "DRAGON ROJO", description: "Fruta del dragon con frutillas, natillas y cremas.", category: "Postres", image: "/Postres.jpg" },
+    { id: 4, name: "FRÁRBARO", description: "Frutillas con crema (nueva receta).", category: "Postres", image: "/Postres.jpg" },
+    { id: 5, name: "IT", description: "Tarta de manzana con crema y canela (similar al Gambit).", category: "Postres", image: "/Postres.jpg" },
+    { id: 6, name: "MANA LIMON", description: "Galleta con crema de vainilla y limon (muy intenso).", category: "Postres", image: "/Postres.jpg" },
+    { id: 7, name: "TENTACION (RECETA MEJORADA)", description: "Frutilla con chocolate de cobertura. (Más frutilla, más dulce y menos oscuro).", category: "Postres", image: "/Postres.jpg" },
+    { id: 8, name: "VAINILLA SKY", description: "Mezcla de distintos tipos de vainillas dulces.", category: "Postres", image: "/Postres.jpg" },
+    { id: 9, name: "BANABOOM (RECETA MEJORADA)", description: "Banana, chocolate y cremas. (Color menos oscuro, más intenso de sabor).", category: "Postres", image: "/Postres.jpg" },
+    { id: 10, name: "COQUITOS", description: "Tarta de dulce de leche con coco.", category: "Postres", image: "/Postres.jpg" },
     { id: 11, name: "ANANÁ FIZZ", description: "Dulce, ácido e intenso.", category: "Frutales", image: "/Frutales.jpg" },
     { id: 12, name: "CIRCUS", description: "Manzana roja con caramelo.", category: "Frutales", image: "/Frutales.jpg" },
-    // ...other products for Frutales
+    { id: 13, name: "DURAZNO", description: "Durazno dulce.", category: "Frutales", image: "/Frutales.jpg" },
+    { id: 14, name: "MANGO", description: "Mango dulce.", category: "Frutales", image: "/Frutales.jpg" },
+    { id: 15, name: "MEGA MELONS", description: "Papaya, mango y melon.", category: "Frutales", image: "/Frutales.jpg" },
+    { id: 16, name: "MELoN", description: "Caramelo de melon y yogurt.", category: "Frutales", image: "/Frutales.jpg" },
+    { id: 17, name: "PEDO DE MONO (RECETA MEJORADA)", description: "Frutilla, banana y crema de mani. (Más banana dulce y cremas).", category: "Frutales", image: "/Frutales.jpg" },
+    { id: 18, name: "PERICLES", description: "Peras en almibar con un toque de ron.", category: "Frutales", image: "/Frutales.jpg" },
+    { id: 19, name: "SANDÍA", description: "Sandia dulce.", category: "Frutales", image: "/Frutales.jpg" },
+    { id: 20, name: "UVA FIZZ", description: "Uva concord dulce, intensa y ácida.", category: "Frutales", image: "/Frutales.jpg" },
     { id: 21, name: "ANANA FRESH", description: "Ananá dulce ácido y fresco (frio medio).", category: "Fresh", image: "/Fresh.jpg" },
     { id: 22, name: "ARANDANO FRESH", description: "Arándanos dulces e intensos (frio medio).", category: "Fresh", image: "/Fresh.jpg" },
-    // ...other products for Fresh
+    { id: 23, name: "SPEED OF MELON", description: "Interesante mezcla de bebida energizante y mega melons.", category: "Frutales", image: "/Frutales.jpg" },
+    { id: 24, name: "KAMUS", description: "Menta, menthol, eucalipto y coolada (frío muy intenso).", category: "Fresh", image: "/Fresh.jpg" },
+    { id: 25, name: "LUPIN NUEVA RECETA", description: "Limonada de frutilla con un toque de frio.", category: "Fresh", image: "/Fresh.jpg" },
+    { id: 26, name: "MANGO FRESH", description: "Mango dulce y fresco (frío medio).", category: "Fresh", image: "/Fresh.jpg" },
+    { id: 27, name: "MEGA TROPICAL (NUEVA RECETA)", description: "Mango y bananas duices con cremas, riquísimo.", category: "Fresh", image: "/Fresh.jpg" },
+    { id: 28, name: "PINKI", description: "Frutos rojos con toques de Anís y mentol, similar a Red Astaire (frio suave).", category: "Fresh", image: "/Fresh.jpg" },
+    { id: 29, name: "PIÑA COLADA", description: "Ananá y mango con leche de coco (frío medio).", category: "Fresh", image: "/Fresh.jpg" },
+    { id: 30, name: "SANDÍA FRESH", description: "Sandia fresca y dulce (intensidad media).", category: "Fresh", image: "/Fresh.jpg" },
     { id: 31, name: "ARMSTRONG", description: "Tabaco cubano con notas de frutos secos y caramelo.", category: "Tabaquiles", image: "/Tabaquiles.jpg" },
     { id: 32, name: "ARGENTO", description: "Tabaco rubio con notas de uva, super seco.", category: "Tabaquiles", image: "/Tabaquiles.jpg" },
-    // ...other products for Tabaquiles
+    { id: 33, name: "UVA FRESH", description: "Caramelo de uva con coolada (frio Medio).", category: "Fresh", image: "/Fresh.jpg" },
+    { id: 34, name: "BONNIE AND CLYDE", description: "Tabaco rojo con caramelo, ron, tabaco de pipa y frutos secos (tabaquil intenso).", category: "Tabaquiles", image: "/Tabaquiles.jpg" },
+    { id: 35, name: "CAPONE", description: "Tabaco negro con vainillas y caramelo para redondear (sabor Intenso similar a un cigarrillo).", category: "Tabaquiles", image: "/Tabaquiles.jpg" },
+    { id: 36, name: "ÉXTASIS", description: "Tabaco con chocolate crema de mani y banana con notas de coco de fondo.", category: "Tabaquiles", image: "/Tabaquiles.jpg" },
+    { id: 37, name: "GOLDEN VIRGINIA", description: "Tabaco rubio suave.", category: "Tabaquiles", image: "/Tabaquiles.jpg" },
+    { id: 38, name: "TRIBECA", description: "Tabaco rubio con caramelo y frutos secos.", category: "Tabaquiles", image: "/Tabaquiles.jpg" },
+    { id: 39, name: "DON JUAN TABACO DULCE", description: "Tabaco rubio con tarta, helado de vainilla, sutiles notas de chocolate con leche y un predominante sabor a pecan para redondear.", category: "Tabaquiles", image: "/Tabaquiles.jpg" },
   ]
 
   const [products, setProducts] = useState(initialProducts)
   const [cartItems, setCartItems] = useState({})
   const [isCartOpen, setIsCartOpen] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const [sortOrder, setSortOrder] = useState("default")
+  const [searchQuery, setSearchQuery] = useState("") // Track search input
+  const [selectedCategory, setSelectedCategory] = useState("Todos") // Track selected category
   const [selectedSizes, setSelectedSizes] = useState({})
-  const [selectedQuantities, setSelectedQuantities] = useState({}) // Track quantities for each product
+  const [selectedQuantities, setSelectedQuantities] = useState({})
 
   const sizePrices = { "30ml": 5500, "60ml": 7000, "120ml": 11000 }
+
+  // Filter products by category and search query
+  const filteredProducts = initialProducts.filter((product) => {
+    const matchesCategory =
+      selectedCategory === "Todos" || product.category === selectedCategory
+    const matchesSearch =
+      product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      product.description.toLowerCase().includes(searchQuery.toLowerCase())
+    return matchesCategory && matchesSearch
+  })
+
+  // Ensure selectedSizes is initialized only once
+  useEffect(() => {
+    if (Object.keys(selectedSizes).length === 0) {
+      const defaultSizes = {};
+      initialProducts.forEach((product) => {
+        defaultSizes[product.id] = "30ml";
+      });
+      setSelectedSizes(defaultSizes);
+    }
+  }, []);
 
   // Load cart items from localStorage on component mount
   useEffect(() => {
@@ -56,66 +103,49 @@ export default function LiquidosPage() {
     setSelectedSizes(defaultSizes);
   }, []); // Removed dependency on initialProducts to avoid infinite loop
 
-  // Sort products when sort order changes
-  useEffect(() => {
-    const sortedProducts = [...initialProducts]
-
-    if (sortOrder === "lowToHigh") {
-      sortedProducts.sort((a, b) => sizePrices["30ml"] - sizePrices["30ml"])
-    } else if (sortOrder === "highToLow") {
-      sortedProducts.sort((a, b) => sizePrices["30ml"] - sizePrices["30ml"])
-    }
-
-    setProducts(sortedProducts)
-  }, [sortOrder])
-
   // Calculate total items in cart
   const totalItems = Object.values(cartItems).flat().reduce((total, item) => total + item.quantity, 0)
 
   // Calculate total price
-  const totalPrice = Object.values(cartItems).flat().reduce((total, item) => total + sizePrices[item.size] * item.quantity, 0)
+  const totalPrice = Object.values(cartItems)
+    .flat()
+    .reduce((total, item) => total + (item.product?.price || 0) * item.quantity, 0);
 
   // Agregar producto al carrito agrupado por categoría
-const addToCart = (product, size, quantity) => {
-  console.log("Agregando producto al carrito:", product.name);
+  const addToCart = (product, size, quantity) => {
+    console.log("Agregando producto al carrito:", product.name);
 
-  setCartItems((prevItems) => {
-    // Clonar el estado anterior para mantener inmutabilidad
-    const updatedItems = { ...prevItems };
+    setCartItems((prevItems) => {
+      const updatedItems = { ...prevItems };
 
-    // Verificar si la categoría existe en el carrito
-    if (!updatedItems[product.category]) {
-      updatedItems[product.category] = [];
-    } else {
-      // Clonar el array de la categoría para evitar mutaciones directas
-      updatedItems[product.category] = [...updatedItems[product.category]];
-    }
+      if (!updatedItems[product.category]) {
+        updatedItems[product.category] = [];
+      } else {
+        updatedItems[product.category] = [...updatedItems[product.category]];
+      }
 
-    // Buscar si el producto ya está en el carrito con el mismo tamaño
-    const existingItemIndex = updatedItems[product.category].findIndex(
-      (item) => item.product.id === product.id && item.size === size
-    );
+      const existingItemIndex = updatedItems[product.category].findIndex(
+        (item) => item.product.id === product.id && item.size === size
+      );
 
-    if (existingItemIndex !== -1) {
-      console.log("Producto ya existe en carrito. Aumentando cantidad.");
-      // Clonar el producto existente para evitar mutaciones directas
-      const updatedProduct = {
-        ...updatedItems[product.category][existingItemIndex],
-        quantity: updatedItems[product.category][existingItemIndex].quantity + quantity,
-      };
+      if (existingItemIndex !== -1) {
+        const updatedProduct = {
+          ...updatedItems[product.category][existingItemIndex],
+          quantity: updatedItems[product.category][existingItemIndex].quantity + quantity,
+        };
+        updatedItems[product.category][existingItemIndex] = updatedProduct;
+      } else {
+        updatedItems[product.category].push({
+          product: { ...product, price: sizePrices[size] }, // Include price
+          size,
+          quantity,
+        });
+      }
 
-      updatedItems[product.category][existingItemIndex] = updatedProduct;
-    } else {
-      console.log("Producto nuevo. Agregándolo al carrito.");
-      updatedItems[product.category].push({ product, size, quantity });
-    }
-
-    console.log("Carrito actualizado:", updatedItems);
-    localStorage.setItem("cartItems", JSON.stringify(updatedItems));
-    return updatedItems;
-  });
-};
-
+      localStorage.setItem("cartItems", JSON.stringify(updatedItems));
+      return updatedItems;
+    });
+  };
 
   // Remove product from cart
   const removeFromCart = (productId, size) => {
@@ -167,8 +197,8 @@ const addToCart = (product, size, quantity) => {
         const categoryMessage = items
           .map(
             (item) =>
-              `*${item.product.name} (${item.size})* x${item.quantity} - $${(
-                sizePrices[item.size] * item.quantity
+              `*${item.product.name} (${item.size || "N/A"})* x${item.quantity} - $${(
+                (item.product.price || 0) * item.quantity
               ).toFixed(2)}`
           )
           .join("\n");
@@ -311,54 +341,51 @@ const addToCart = (product, size, quantity) => {
           </div>
         </div>
       </div>
+      <h2 className="text-3xl font-bold mb-4 ml-4 mt-4 sm:mb-0">Nuestros Liquidos</h2>
+      {/* Quick Filters and Search */}
+      <div className="container mx-auto px-4 py-4">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div className="flex flex-wrap justify-center gap-2">
+            {["Todos", "Postres", "Frutales", "Fresh", "Tabaquiles"].map((category) => (
+              <Button
+                key={category}
+                variant={selectedCategory === category ? "solid" : "outline"}
+                className={`text-sm ${
+                  selectedCategory === category
+                    ? "bg-gradient-to-r from-fuchsia-600 to-purple-600 text-white"
+                    : "border-purple-500 text-gray-300 hover:bg-purple-900/50"
+                }`}
+                onClick={() => setSelectedCategory(category)}
+              >
+                {category}
+              </Button>
+            ))}
+          </div>
+          <input
+            type="text"
+            placeholder="Buscar líquidos..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full sm:w-64 px-4 py-2 rounded-md bg-black/40 border border-purple-500 text-gray-300 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-fuchsia-500"
+          />
+        </div>
+      </div>
 
       {/* Main content */}
-      <main className="container mx-auto px-4 py-8">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8">
-          <h2 className="text-3xl font-bold mb-4 sm:mb-0">Nuestros Líquidos</h2>
-
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="border-purple-500 hover:bg-purple-900/50">
-                <ArrowUpDown className="h-4 w-4 mr-2" />
-                Ordenar por precio
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="bg-black/90 border-purple-500/50">
-              <DropdownMenuItem
-                className={`${sortOrder === "default" ? "bg-purple-900/50 text-fuchsia-300" : ""} hover:bg-purple-900/30 cursor-pointer`}
-                onClick={() => setSortOrder("default")}
-              >
-                Predeterminado
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                className={`${sortOrder === "lowToHigh" ? "bg-purple-900/50 text-fuchsia-300" : ""} hover:bg-purple-900/30 cursor-pointer`}
-                onClick={() => setSortOrder("lowToHigh")}
-              >
-                Precio: Menor a Mayor
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                className={`${sortOrder === "highToLow" ? "bg-purple-900/50 text-fuchsia-300" : ""} hover:bg-purple-900/30 cursor-pointer`}
-                onClick={() => setSortOrder("highToLow")}
-              >
-                Precio: Mayor a Menor
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-
+      <main className="container mx-auto px-4 py-4">
+        
         <div className="h-1 w-20 bg-gradient-to-r from-fuchsia-500 to-cyan-500 mb-8"></div>
 
         {/* Products grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {products.map((product) => (
+          {filteredProducts.map((product) => (
             <div
               key={product.id}
               className="bg-black/40 backdrop-blur-sm border border-purple-500/30 rounded-lg overflow-hidden hover:shadow-[0_0_15px_rgba(219,39,119,0.3)] transition-all duration-300"
             >
               <div className="p-4">
                 <div className="relative h-48 mb-4 overflow-hidden rounded-md">
-                  <Image src={product.image || "/placeholder.svg"} alt={product.name} fill className="object-cover" />
+                  <Image src={product.image || "/placeholder.svg"} alt={product.name} fill className="object-contain" />
                 </div>
                 <h3 className="text-xl font-semibold mb-2 text-fuchsia-300">{product.name}</h3>
                 <p className="text-gray-300 mb-4 text-sm">{product.description}</p>
@@ -492,13 +519,16 @@ const addToCart = (product, size, quantity) => {
                               src={item.product.image || "/placeholder.svg"}
                               alt={item.product.name}
                               fill
-                              className="object-cover"
+                              className="object-contain"
                             />
                           </div>
                           <div className="flex-1">
-                            <h3 className="font-medium text-fuchsia-300">{item.product.name} ({item.size})</h3>
+                            <h3 className="font-medium text-fuchsia-300">
+                              {item.product.name}{" "}
+                              {item.size && <span className="text-gray-400 text-sm">({item.size})</span>}
+                            </h3>
                             <p className="text-cyan-400 text-sm font-bold">
-                              ${sizePrices[item.size]?.toFixed(2) || "0.00"}
+                              ${item.product?.price?.toFixed(2) || "0.00"}
                             </p>
                           </div>
                         </div>

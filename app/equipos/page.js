@@ -1,5 +1,6 @@
 "use client"
 
+import React from "react" // Add this import
 import { useState, useEffect } from "react"
 import Image from "next/image"
 import Link from "next/link"
@@ -10,50 +11,42 @@ import { Separator } from "@/components/ui/separator"
 import { cn } from "@/lib/utils"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 
+// Component to format product descriptions with line breaks
+const ProductDescription = ({ description }) => {
+  const formattedDescription = description.split("\n").map((line, index) => (
+    <React.Fragment key={index}>
+      {line}
+      <br />
+    </React.Fragment>
+  ));
+
+  return <div>{formattedDescription}</div>;
+};
+
 export default function EquiposPage() {
   // Sample products data for Equipos category
   const initialProducts = [
     {
       id: 1,
-      name: "Vape Pod System Pro",
-      description: "Sistema compacto con batería de 1500mAh y tanque de 4ml. Ideal para principiantes.",
-      price: 49.99,
-      image: "/placeholder.svg?height=300&width=300",
-    },
+      name: "Voopoo Drag Nano 2",
+      description: "  El Drag Nano 2 es un dispositivo compacto pero potente que mantiene el diseño clásico de la serie Drag. Fabricado con aleación de zinc, ofrece una sensación metálica de alta calidad.\nCuenta con un innovador sistema de flujo de aire infinito que permite ajustar la experiencia de vapeo según tus preferencias.\nAdemás, posee un sistema de llenado superior fácil y a prueba de fugas, con un cartucho visible que muestra el nivel de e-líquido en tiempo real.\nEs compatible con los cartuchos VINCI Pod y viene equipado con dos pods de diferentes resistencias para ofrecer diversas experiencias de sabor.\n¿Qué incluye el kit?\n1x Drag Nano 2\n1x Recambio (resistencia 0.8ohm)\n1x Recambio (resistencia 1.2ohm)\n1x Cable USB-C\n1x Cadena/colgante\n1x Manual de Usuario",
+      price: 35000,
+      image: "/Drag-nano2.jpg",
+    }
+    ,    
     {
       id: 2,
-      name: "Mod Box Avanzado",
-      description: "Potente mod con pantalla a color, batería dual 18650 y potencia de hasta 200W.",
-      price: 89.99,
-      image: "/placeholder.svg?height=300&width=300",
+      name: "Voopoo Vinci Pod Royale Edition",
+      description: "El Voopoo Vinci Pod Royal Edition es una versión premium del Vinci Pod, con un diseño elegante en aleación de aluminio 6061.\nCuenta con una batería de 800 mAh y una potencia de hasta 15W, ideal para vapeo MTL. Su cartucho de 2 ml es visible y se rellena por la parte superior.\nAdemás, tiene un sistema de flujo de aire ajustable y es compatible con los cartuchos Vinci Q, Drag Nano 2 y Vinci Pod.\n¿Qué incluye el kit?\n1x Voopoo Vinci Royal edition\n1x Cartucho de recambio v2 (0.8ohm)\n1x Cartucho de recambio v2 (1.2ohm)\n1x Cable USB-C\n1x Manual de usuario",
+      price: 30000,
+      image: "/Vinci-pod.jpg",
     },
     {
       id: 3,
-      name: "Kit Starter Premium",
-      description: "Kit completo para principiantes con batería de 2000mAh y tanque de 5ml.",
-      price: 59.99,
-      image: "/placeholder.svg?height=300&width=300",
-    },
-    {
-      id: 4,
-      name: "Pod System Desechable",
-      description: "Sistema desechable con 1500 caladas. Varios sabores disponibles.",
-      price: 15.99,
-      image: "/placeholder.svg?height=300&width=300",
-    },
-    {
-      id: 5,
-      name: "Mod Mecánico Pro",
-      description: "Mod mecánico de alta calidad fabricado en acero inoxidable. Para usuarios avanzados.",
-      price: 79.99,
-      image: "/placeholder.svg?height=300&width=300",
-    },
-    {
-      id: 6,
-      name: "Kit MTL Compacto",
-      description: "Sistema MTL con batería de 1200mAh y tanque de 3ml. Perfecto para vapeo discreto.",
-      price: 45.99,
-      image: "/placeholder.svg?height=300&width=300",
+      name: "Voopoo Argus G2 Mini",
+      description: "El Voopoo Argus G2 Mini es compacto y ligero, fabricado en aleación de aluminio y policarbonato. Su batería de 1200 mAh ofrece una potencia ajustable de 5W a 30W.\nEl cartucho de 2 ml se rellena por la parte superior y permite un control preciso del flujo de aire.\nSu interfaz con indicadores LED facilita la visualización del estado de la batería y otros datos.\n¿Qué incluye el kit?\n1x Argus G2 Mini\n1x Pod Argus Top Fill de 0.7ohm\n1x Manual de usuario",
+      price: 30000,
+      image: "/Argus-g2.jpg",
     },
   ]
 
@@ -63,14 +56,13 @@ export default function EquiposPage() {
   const [isCartOpen, setIsCartOpen] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [sortOrder, setSortOrder] = useState("default") // default, lowToHigh, highToLow
+  const [expandedDescriptions, setExpandedDescriptions] = useState({});
 
   // Load cart items from localStorage on component mount
   useEffect(() => {
     const storedCartItems = JSON.parse(localStorage.getItem("cartItems")) || {};
     setCartItems(storedCartItems);
   }, []);
-
-  
 
   // Sort products when sort order changes
   useEffect(() => {
@@ -89,7 +81,9 @@ export default function EquiposPage() {
   const totalItems = Object.values(cartItems).flat().reduce((total, item) => total + item.quantity, 0)
 
   // Calculate total price
-  const totalPrice = Object.values(cartItems).flat().reduce((total, item) => total + item.product.price * item.quantity, 0)
+  const totalPrice = Object.values(cartItems)
+    .flat()
+    .reduce((total, item) => total + (item.product?.price || 0) * item.quantity, 0);
 
   // Add product to cart grouped by category
   const addToCart = (product) => {
@@ -108,7 +102,10 @@ export default function EquiposPage() {
           item.product.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
         );
       } else {
-        updatedItems[category].push({ product, quantity: 1 });
+        updatedItems[category].push({
+          product: { ...product }, // Include price and other details
+          quantity: 1,
+        });
       }
 
       // Save updated cart to localStorage
@@ -154,7 +151,12 @@ export default function EquiposPage() {
     const message = Object.entries(cartItems)
       .map(([category, items]) => {
         const categoryMessage = items
-          .map((item) => `*${item.product.name}* x${item.quantity} - $${(item.product.price * item.quantity).toFixed(2)}`)
+          .map(
+            (item) =>
+              `*${item.product.name} (${item.size || "N/A"})* x${item.quantity} - $${(
+                (item.product.price || 0) * item.quantity
+              ).toFixed(2)}`
+          )
           .join("\n");
         return `🛒 Mi Pedido (${category}):\n${categoryMessage}`;
       })
@@ -171,6 +173,13 @@ export default function EquiposPage() {
 
     setCartItems({});
     localStorage.removeItem("cartItems");
+  };
+
+  const toggleDescription = (productId) => {
+    setExpandedDescriptions((prev) => ({
+      ...prev,
+      [productId]: !prev[productId],
+    }));
   };
 
   return (
@@ -342,10 +351,30 @@ export default function EquiposPage() {
             >
               <div className="p-4">
                 <div className="relative h-48 mb-4 overflow-hidden rounded-md">
-                  <Image src={product.image || "/placeholder.svg"} alt={product.name} fill className="object-cover" />
+                  <Image 
+                    src={product.image || "/placeholder.svg"} 
+                    alt={product.name} 
+                    fill 
+                    className="object-contain" 
+                  />
                 </div>
                 <h3 className="text-xl font-semibold mb-2 text-cyan-300">{product.name}</h3>
-                <p className="text-gray-300 mb-4 text-sm">{product.description}</p>
+                <div className="text-gray-300 mb-4 text-sm">
+                  {expandedDescriptions[product.id] ? (
+                    <ProductDescription description={product.description} />
+                  ) : (
+                    <>
+                      <ProductDescription description={product.description.slice(0, 100)} />
+                      ...
+                    </>
+                  )}
+                  <button
+                    onClick={() => toggleDescription(product.id)}
+                    className="text-blue-400 hover:underline ml-2"
+                  >
+                    {expandedDescriptions[product.id] ? "Leer menos" : "Leer más"}
+                  </button>
+                </div>
                 <div className="flex justify-between items-center">
                   <span className="text-lg font-bold text-blue-400">${product.price.toFixed(2)}</span>
                   <Button
@@ -406,7 +435,10 @@ export default function EquiposPage() {
                             />
                           </div>
                           <div className="flex-1">
-                            <h3 className="font-medium text-cyan-300">{item.product.name}</h3>
+                            <h3 className="font-medium text-cyan-300">
+                              {item.product.name}{" "}
+                              {item.size && <span className="text-gray-400 text-sm">({item.size})</span>}
+                            </h3>
                             <p className="text-blue-400 text-sm font-bold">
                               ${item.product?.price?.toFixed(2) || "0.00"}
                             </p>

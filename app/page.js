@@ -48,7 +48,7 @@ export default function HomePage() {
   // Calculate total price
   const totalPrice = Object.values(cartItems)
     .flat()
-    .reduce((total, item) => total + item.product.price * item.quantity, 0);
+    .reduce((total, item) => total + (item.product?.price || 0) * item.quantity, 0);
 
   // Remove product from cart
   const removeFromCart = (productId) => {
@@ -89,8 +89,8 @@ export default function HomePage() {
         const categoryMessage = items
           .map(
             (item) =>
-              `*${item.product.name}* x${item.quantity} - $${(
-                item.product.price * item.quantity
+              `*${item.product.name} (${item.size || "N/A"})* x${item.quantity} - $${(
+                (item.product.price || 0) * item.quantity
               ).toFixed(2)}`
           )
           .join("\n");
@@ -117,21 +117,21 @@ export default function HomePage() {
       id: "liquidos",
       name: "Líquidos",
       description: "Variedad de líquidos premium para vapeo con diferentes sabores y concentraciones.",
-      image: "/placeholder.svg?height=400&width=400",
+      image: "/Liquidos.jpg",
       color: "from-fuchsia-600 to-purple-600",
     },
     {
       id: "equipos",
       name: "Equipos",
       description: "Dispositivos de vapeo de alta calidad, desde principiantes hasta avanzados.",
-      image: "/placeholder.svg?height=400&width=400",
+      image: "/Equipos.jpg",
       color: "from-cyan-600 to-blue-600",
     },
     {
       id: "repuestos",
       name: "Repuestos",
       description: "Accesorios y repuestos para mantener tu equipo funcionando perfectamente.",
-      image: "/placeholder.svg?height=400&width=400",
+      image: "/Repuestos.jpg",
       color: "from-green-500 to-emerald-600",
     },
   ]
@@ -292,7 +292,8 @@ export default function HomePage() {
                           </div>
                           <div className="flex-1">
                             <h3 className="font-medium text-fuchsia-300">
-                              {item.product.name}
+                              {item.product.name}{" "}
+                              {item.size && <span className="text-gray-400 text-sm">({item.size})</span>}
                             </h3>
                             <p className="text-cyan-400 text-sm font-bold">
                               ${item.product?.price?.toFixed(2) || "0.00"}
@@ -358,29 +359,25 @@ export default function HomePage() {
       </div>
 
       {/* Hero Section */}
-      <section className="py-12 md:py-20 px-4">
+      <section className="pt-2 md:pt-2 px-2 mt-5">
         <div className="container mx-auto text-center">
-          <h1 className="text-4xl md:text-6xl font-bold mb-6">
+          <h1 className="text-4xl md:text-5xl font-bold mb-6">
             <span className="bg-clip-text text-transparent bg-gradient-to-r from-fuchsia-500 to-cyan-500">
               Bienvenido a Neon Vape
             </span>
           </h1>
-          <p className="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto mb-12">
+          <p className="text-xl md:text-xl text-gray-300 max-w-3xl mx-auto mb-6">
             Descubre nuestra selección premium de productos para vapeo
           </p>
 
           {/* Glowing underline */}
-          <div className="h-1 w-32 bg-gradient-to-r from-fuchsia-500 to-cyan-500 mx-auto mb-16 shadow-[0_0_10px_rgba(219,39,119,0.7)]"></div>
+          <div className="h-1 w-32 bg-gradient-to-r from-fuchsia-500 to-cyan-500 mx-auto shadow-[0_0_10px_rgba(219,39,119,0.7)]"></div>
         </div>
       </section>
 
       {/* Categories Section */}
-      <section className="py-12 px-4">
+      <section className="py-8 px-4">
         <div className="container mx-auto">
-          <h2 className="text-3xl font-bold mb-12 text-center">
-            Nuestras Categorías
-            <span className="block h-1 w-20 bg-gradient-to-r from-fuchsia-500 to-cyan-500 mx-auto mt-2"></span>
-          </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {categories.map((category) => (

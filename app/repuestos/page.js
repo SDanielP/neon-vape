@@ -15,46 +15,46 @@ export default function RepuestosPage() {
   const initialProducts = [
     {
       id: 1,
-      name: "Resistencias Premium",
-      description: "Pack de 5 resistencias de malla para tanques sub-ohm. Compatibles con múltiples marcas.",
-      price: 14.99,
-      image: "/placeholder.svg?height=300&width=300",
-    },
-    {
-      id: 2,
-      name: "Tanque de Vidrio",
-      description: "Tanque de repuesto de vidrio pyrex de 5ml. Compatible con varios modelos.",
-      price: 9.99,
-      image: "/placeholder.svg?height=300&width=300",
-    },
-    {
-      id: 3,
-      name: "Baterías 18650",
-      description: "Par de baterías de alta capacidad 3000mAh. Ideal para mods de potencia.",
-      price: 19.99,
-      image: "/placeholder.svg?height=300&width=300",
-    },
-    {
-      id: 4,
-      name: "Kit de O-rings",
-      description: "Kit completo de juntas tóricas para mantenimiento de tanques y atomizadores.",
-      price: 5.99,
-      image: "/placeholder.svg?height=300&width=300",
-    },
-    {
-      id: 5,
-      name: "Bobinas RDA",
-      description: "Pack de 10 bobinas prearmadas para RDA/RTA. Diferentes resistencias disponibles.",
-      price: 12.99,
-      image: "/placeholder.svg?height=300&width=300",
-    },
-    {
-      id: 6,
-      name: "Cargador de Baterías",
-      description: "Cargador inteligente para baterías 18650/20700/21700 con pantalla LCD.",
-      price: 24.99,
-      image: "/placeholder.svg?height=300&width=300",
-    },
+      name: "Resistencia Smoke Pen 22",
+      description: "La Resistencia Smok Vape Pen 22 es un repuesto compatible con los modelos Vape Pen 22, Plus y V2. Disponible en version 0.3 ohm, ofrece buen sabor y vapor.",
+      price: 7000,
+      image: "/Smoke-pen22-coil.jpg",
+     },
+    // {
+    //   id: 2,
+    //   name: "Tanque de Vidrio",
+    //   description: "Tanque de repuesto de vidrio pyrex de 5ml. Compatible con varios modelos.",
+    //   price: 9.99,
+    //   image: "/placeholder.svg?height=300&width=300",
+    // },
+    // {
+    //   id: 3,
+    //   name: "Baterías 18650",
+    //   description: "Par de baterías de alta capacidad 3000mAh. Ideal para mods de potencia.",
+    //   price: 19.99,
+    //   image: "/placeholder.svg?height=300&width=300",
+    // },
+    // {
+    //   id: 4,
+    //   name: "Kit de O-rings",
+    //   description: "Kit completo de juntas tóricas para mantenimiento de tanques y atomizadores.",
+    //   price: 5.99,
+    //   image: "/placeholder.svg?height=300&width=300",
+    // },
+    // {
+    //   id: 5,
+    //   name: "Bobinas RDA",
+    //   description: "Pack de 10 bobinas prearmadas para RDA/RTA. Diferentes resistencias disponibles.",
+    //   price: 12.99,
+    //   image: "/placeholder.svg?height=300&width=300",
+    // },
+    // {
+    //   id: 6,
+    //   name: "Cargador de Baterías",
+    //   description: "Cargador inteligente para baterías 18650/20700/21700 con pantalla LCD.",
+    //   price: 24.99,
+    //   image: "/placeholder.svg?height=300&width=300",
+    // },
   ]
 
   // State for products, cart items, cart visibility, and mobile menu
@@ -89,7 +89,9 @@ export default function RepuestosPage() {
   const totalItems = Object.values(cartItems).flat().reduce((total, item) => total + item.quantity, 0)
 
   // Calculate total price
-  const totalPrice = Object.values(cartItems).flat().reduce((total, item) => total + item.product.price * item.quantity, 0)
+  const totalPrice = Object.values(cartItems)
+    .flat()
+    .reduce((total, item) => total + (item.product?.price || 0) * item.quantity, 0)
 
   // Add product to cart grouped by category
   const addToCart = (product) => {
@@ -108,7 +110,10 @@ export default function RepuestosPage() {
           item.product.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
         );
       } else {
-        updatedItems[category].push({ product, quantity: 1 });
+        updatedItems[category].push({
+          product: { ...product }, // Include price and other details
+          quantity: 1,
+        });
       }
 
       // Save updated cart to localStorage
@@ -154,7 +159,12 @@ export default function RepuestosPage() {
     const message = Object.entries(cartItems)
       .map(([category, items]) => {
         const categoryMessage = items
-          .map((item) => `*${item.product.name}* x${item.quantity} - $${(item.product.price * item.quantity).toFixed(2)}`)
+          .map(
+            (item) =>
+              `*${item.product.name} (${item.size || "N/A"})* x${item.quantity} - $${(
+                (item.product.price || 0) * item.quantity
+              ).toFixed(2)}`
+          )
           .join("\n");
         return `🛒 Mi Pedido (${category}):\n${categoryMessage}`;
       })
@@ -406,7 +416,10 @@ export default function RepuestosPage() {
                             />
                           </div>
                           <div className="flex-1">
-                            <h3 className="font-medium text-green-300">{item.product.name}</h3>
+                            <h3 className="font-medium text-green-300">
+                              {item.product.name}{" "}
+                              {item.size && <span className="text-gray-400 text-sm">({item.size})</span>}
+                            </h3>
                             <p className="text-emerald-400 text-sm font-bold">
                               ${item.product?.price?.toFixed(2) || "0.00"}
                             </p>
