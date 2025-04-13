@@ -11,7 +11,7 @@ import { cn } from "@/lib/utils"
 
 // Debug: Confirm that the file is loaded
 console.log("LiquidosPage component loaded");
-
+//{ id: 8, name: "VAINILLA SKY", description: "Mezcla de distintos tipos de vainillas dulces.", category: "Postres", image: "/Postres.jpg" },
 export default function LiquidosPage() {
   // Updated products data with categories
   const initialProducts = [
@@ -22,7 +22,6 @@ export default function LiquidosPage() {
     { id: 5, name: "IT", description: "Tarta de manzana con crema y canela (similar al Gambit).", category: "Postres", image: "/Postres.jpg" },
     { id: 6, name: "MANA LIMON", description: "Galleta con crema de vainilla y limon (muy intenso).", category: "Postres", image: "/Postres.jpg" },
     { id: 7, name: "TENTACION (RECETA MEJORADA)", description: "Frutilla con chocolate de cobertura. (Más frutilla, más dulce y menos oscuro).", category: "Postres", image: "/Postres.jpg" },
-    { id: 8, name: "VAINILLA SKY", description: "Mezcla de distintos tipos de vainillas dulces.", category: "Postres", image: "/Postres.jpg" },
     { id: 9, name: "BANABOOM (RECETA MEJORADA)", description: "Banana, chocolate y cremas. (Color menos oscuro, más intenso de sabor).", category: "Postres", image: "/Postres.jpg" },
     { id: 10, name: "COQUITOS", description: "Tarta de dulce de leche con coco.", category: "Postres", image: "/Postres.jpg" },
     { id: 11, name: "ANANÁ FIZZ", description: "Dulce, ácido e intenso.", category: "Frutales", image: "/Frutales.jpg" },
