@@ -5,14 +5,14 @@ import { ThemeProvider } from "@/components/theme-provider"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata = {
-  title: "Neon Tech Shop",
-  description: "Modern tech products with neon aesthetic",
+  title: "Neon-Vape BV",
+  description: "Insumos de vapeo",
   generator: "v0.dev",
 }
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="es" suppressHydrationWarning>
       <body className={inter.className}>
         <ThemeProvider
           attribute="class"

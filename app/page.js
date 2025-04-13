@@ -11,14 +11,32 @@ import { Menu, X } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 export default function HomePage() {
+  // State for age confirmation modal
+  const [isAgeConfirmed, setIsAgeConfirmed] = useState(false);
   // State for cart items count (shared across pages)
-  const [cartItemsCount, setCartItemsCount] = useState(0)
+  const [cartItemsCount, setCartItemsCount] = useState(0);
   // State for mobile menu
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   // State for cart visibility
-  const [isCartOpen, setIsCartOpen] = useState(false)
+  const [isCartOpen, setIsCartOpen] = useState(false);
   // State for cart items
-  const [cartItems, setCartItems] = useState({})
+  const [cartItems, setCartItems] = useState({});
+
+  useEffect(() => {
+    const ageConfirmed = localStorage.getItem("isAgeConfirmed");
+    if (ageConfirmed === "true") {
+      setIsAgeConfirmed(true);
+    }
+  }, []);
+
+  const handleAgeConfirmation = (isConfirmed) => {
+    if (isConfirmed) {
+      setIsAgeConfirmed(true);
+      localStorage.setItem("isAgeConfirmed", "true");
+    } else {
+      document.body.innerHTML = "<div style='color: white; text-align: center; margin-top: 20%; font-size: 24px;'>Debes ser mayor de 18 años para ingresar.</div>";
+    }
+  };
 
   // Load cart items count and items from localStorage on component mount
   useEffect(() => {
@@ -134,7 +152,32 @@ export default function HomePage() {
       image: "/Repuestos.jpg",
       color: "from-green-500 to-emerald-600",
     },
-  ]
+  ];
+
+  if (!isAgeConfirmed) {
+    return (
+      <div className="fixed inset-0 bg-black flex items-center justify-center text-white">
+        <div className="bg-gray-800 p-6 rounded-lg shadow-lg text-center">
+          <h2 className="text-2xl font-bold mb-4">¿Eres mayor de 18 años?</h2>
+          <p className="mb-6">Este sitio está destinado únicamente para mayores de edad.</p>
+          <div className="flex justify-center gap-4">
+            <button
+              className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded"
+              onClick={() => handleAgeConfirmation(true)}
+            >
+              Sí, soy mayor de 18
+            </button>
+            <button
+              className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded"
+              onClick={() => handleAgeConfirmation(false)}
+            >
+              No, salir
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-black to-purple-900 text-white">
