@@ -64,7 +64,7 @@ export default function LiquidosPage() {
   const [selectedSizes, setSelectedSizes] = useState({})
   const [selectedQuantities, setSelectedQuantities] = useState({})
 
-  const sizePrices = { "30ml": 5500, "60ml": 7000, "120ml": 11000 }
+  const sizePrices = { "30ml": 5500, "60ml": 7500, "120ml": 12000 }
 
   // Filter products by category and search query
   const filteredProducts = initialProducts.filter((product) => {
